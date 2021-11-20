@@ -35,7 +35,7 @@ class FruitClient {
   //Creates a call to request
   //Pass any kind of param (path, query) in the path as a map 
   Future<Fruit> getFruit(String fruitName) async {
-    return await _getFruit.call(pathParams: { fruitName: fruitName });
+    return await _getFruit.call(pathParams: { 'fruitName': fruitName });
   }
 
   Future<List<Fruit>> getAllFruit() async {
@@ -55,7 +55,7 @@ class FruitClient {
 class Fruit implements JsonDecoder<Fruit>, JsonEncoder<Fruit> {
   String genus = "";
   String name = "";
-  String id = "";
+  int id = 0;
   String family = "";
   String order = "";
   Nutrition nutritions = Nutrition();
@@ -68,33 +68,54 @@ class Fruit implements JsonDecoder<Fruit>, JsonEncoder<Fruit> {
     fruit.id = jsonMap['id'];
     fruit.family = jsonMap['family'];
     fruit.order = jsonMap['order'];
-    fruit.nutritions = Nutrition().fromJson(jsonMap['nutritions']);
+    fruit.nutritions = NutritionDecoder().fromJson(jsonMap['nutritions']);
     return fruit;
   }
 
   @override
   Map<String, dynamic> toJson(Fruit obj) {
-    throw UnimplementedError();
+    
+    Map<String, dynamic> map = <String, dynamic>{};
+
+    map['genus'] = obj.genus;
+    map['name'] = obj.name;
+    map['id'] = obj.id;
+    map['family'] = obj.family;
+    map['order'] = obj.order;
+    map['nutritions'] = NutritionEncoder().toJson(obj.nutritions);
+
+    return map;
   }
 }
 
-class Nutrition implements JsonDecoder<Nutrition>, JsonEncoder<Nutrition> {
-  String carbohydrates = "";
-  String protein = "";
-  String fat = "";
-  String calories = "";
-  String sugar = "";
+class Nutrition {
+  num carbohydrates = 0;
+  num protein = 0;
+  num fat = 0;
+  num calories = 0;
+  num sugar = 0;
+
+}
+
+class NutritionDecoder extends JsonDecoder<Nutrition> {
 
   @override
-  Nutrition fromJson(dynamic jsonMap) {
+  Nutrition fromJson(jsonMap) {
     Nutrition nutrition = Nutrition();
     nutrition.carbohydrates = jsonMap['carbohydrates'];
     return nutrition;
   }
+  
+}
+
+class NutritionEncoder extends JsonEncoder<Nutrition> {
 
   @override
   Map<String, dynamic> toJson(Nutrition obj) {
-    throw UnimplementedError();
+     Map<String, dynamic> map = <String, dynamic>{};
+     map['carbohydrates'] = obj.carbohydrates;
+     return map;
   }
+  
 }
 
