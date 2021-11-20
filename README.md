@@ -11,7 +11,7 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-A library to make Rest API clients more easily. Inspired by Java Feing.
+A Flutter library to make Rest API clients more easily. Inspired by Java Feing.
 
 ## Features
 
