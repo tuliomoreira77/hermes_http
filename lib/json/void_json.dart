@@ -1,14 +1,8 @@
-
-
 import 'parser.dart';
 
 class VoidJsonDecoder extends JsonDecoder<void> {
-
   @override
-  void fromJson(dynamic jsonMap) {
-    
-  }
-  
+  void fromJson(dynamic jsonMap) {}
 }
 
 class VoidJsonEncoder extends JsonEncoder<void> {
@@ -16,5 +10,4 @@ class VoidJsonEncoder extends JsonEncoder<void> {
   Map<String, dynamic> toJson(void obj) {
     return <String, dynamic>{};
   }
-  
 }

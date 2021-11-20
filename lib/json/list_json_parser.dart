@@ -1,6 +1,4 @@
-
 import 'package:hermes_http/json/parser.dart';
-
 
 class ListJsonDecoder<T> extends JsonDecoder<List<T>> {
   JsonDecoder<T> baseParser;

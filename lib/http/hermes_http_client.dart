@@ -1,4 +1,3 @@
-
 import 'package:http/http.dart';
 
 ///Base abstraction of a http client
@@ -11,12 +10,11 @@ abstract class IHermesHttpClient {
 
 ///Concrete Http Client built on top of http.dart
 class HermesHttpClient {
-
   late String _baseUri;
   final Map<String, String> _baseHeaders = Map();
 
   HermesHttpClient(baseUri) {
-    if(baseUri.endsWith('/')) {
+    if (baseUri.endsWith('/')) {
       _baseUri = baseUri.substring(0, baseUri.length - 1);
     }
     _baseUri = baseUri;
@@ -33,20 +31,19 @@ class HermesHttpClient {
   Request getBaseRequest(String method, String path) {
     var url = Uri.parse('$_baseUri$path');
     var request = Request(method, url);
-    _baseHeaders.forEach((key, value) { 
+    _baseHeaders.forEach((key, value) {
       request.headers[key] = value;
     });
     request.persistentConnection = false;
-    
+
     return request;
   }
 
   Future<Response> makeRequest(BaseRequest request) async {
     var client = Client();
     var response = await client.send(request);
-    var objectResponse =  await Response.fromStream(response);
+    var objectResponse = await Response.fromStream(response);
     client.close();
     return objectResponse;
   }
-
 }

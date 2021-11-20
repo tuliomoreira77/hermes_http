@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:hermes_http/http/hermes_http_client.dart';
 import 'package:hermes_http/http/template_sting.dart';
@@ -16,24 +15,29 @@ class HermesRequest<RequestBody, ResponseBody> {
   final JsonEncoder<RequestBody> _requestEncoder;
   final Map<String, String> headers;
 
-  HermesRequest(this._client, this._method, this._path, this._requestEncoder, this._responseParser, {this.headers = const <String,String>{}, this.maxAttempts = 3}) {
-    if(!_path.startsWith('/')) {
+  HermesRequest(this._client, this._method, this._path, this._requestEncoder,
+      this._responseParser,
+      {this.headers = const <String, String>{}, this.maxAttempts = 3}) {
+    if (!_path.startsWith('/')) {
       throw Exception("Request template path must start with ' / ' ");
     }
   }
 
-  Future<ResponseBody> call({ Map<String, String> pathParams = const <String,String>{} , RequestBody? body }) async {
-    var requestBody = body == null ? "" : jsonEncode(_requestEncoder.toJson(body));
+  Future<ResponseBody> call(
+      {Map<String, String> pathParams = const <String, String>{},
+      RequestBody? body}) async {
+    var requestBody =
+        body == null ? "" : jsonEncode(_requestEncoder.toJson(body));
     var response = await _call(pathParams, requestBody);
     int status = response.statusCode;
     int statusFamily = status ~/ 100;
 
-    if(statusFamily == 2) {
+    if (statusFamily == 2) {
       return _responseParser.fromJson(jsonDecode(response.body));
     } else {
-      throw HermesRequestError(response.statusCode, _method, response.request!.url.toString(), response.body);
+      throw HermesRequestError(response.statusCode, _method,
+          response.request!.url.toString(), response.body);
     }
-
   }
 
   Future<Response> _call(Map<String, String> pathParams, String body) async {
@@ -42,17 +46,16 @@ class HermesRequest<RequestBody, ResponseBody> {
       var parsedPath = templateUrl.format(pathParams);
 
       var request = _client.getBaseRequest(_method, parsedPath);
-      headers.forEach((key, value) { 
+      headers.forEach((key, value) {
         request.headers[key] = value;
       });
       request.body = body;
 
       var response = await _client.makeRequest(request);
       return response;
-
-    } catch(err) {
+    } catch (err) {
       _attempts++;
-      if(_attempts >= maxAttempts) {
+      if (_attempts >= maxAttempts) {
         _attempts = 0;
         rethrow;
       } else {
@@ -60,7 +63,7 @@ class HermesRequest<RequestBody, ResponseBody> {
         _attempts = 0;
         return response;
       }
-    } 
+    }
   }
 
   addHeader(String key, String value) {
@@ -70,7 +73,6 @@ class HermesRequest<RequestBody, ResponseBody> {
   removeHeader(String key) {
     headers.remove(key);
   }
-
 }
 
 class HermesRequestError implements Exception {

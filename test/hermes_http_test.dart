@@ -5,19 +5,15 @@ import 'package:hermes_http/json/list_json_parser.dart';
 import 'package:hermes_http/json/parser.dart';
 import 'package:hermes_http/json/void_json.dart';
 
-
 void main() {
   var fruitClient = FruitClient();
   test('should return the fruit banana', () async {
     Fruit fruit = await fruitClient.getFruit('banana');
     expect(fruit.name.toLowerCase(), 'banana');
   });
-  
 }
 
-
 class FruitClient {
-
   late HermesHttpClient _client;
 
   //declares a request with the request body type and the response body type
@@ -34,34 +30,38 @@ class FruitClient {
     _client.addHeader("Connection", "keep-alive");
 
     //Creates the request instance
-    _getFruit = HermesRequest(_client, 'get', '/api/fruit/{fruitName}', VoidJsonEncoder(), Fruit());
+    _getFruit = HermesRequest(
+        _client, 'get', '/api/fruit/{fruitName}', VoidJsonEncoder(), Fruit());
 
     //Create the request using the class ListJsonDecoder to parse the json list
-    _getAllFruit = HermesRequest(_client, 'get', '/api/fruit/all', VoidJsonEncoder(), ListJsonDecoder<Fruit>(Fruit()));
+    _getAllFruit = HermesRequest(_client, 'get', '/api/fruit/all',
+        VoidJsonEncoder(), ListJsonDecoder<Fruit>(Fruit()));
 
     //Create the request setting the maxAttemps (retry) to only 1 (defaults 3)
-    _addFruit = HermesRequest(_client, 'put', '/api/fruit', Fruit(), VoidJsonDecoder(), maxAttempts: 1);
+    _addFruit = HermesRequest(
+        _client, 'put', '/api/fruit', Fruit(), VoidJsonDecoder(),
+        maxAttempts: 1);
   }
 
   //Creates a call to request
-  //Pass any kind of param (path, query) in the path as a map 
+  //Pass any kind of param (path, query) in the path as a map
   Future<Fruit> getFruit(String fruitName) async {
-    return await _getFruit.call(pathParams: { 'fruitName': fruitName });
+    return await _getFruit.call(pathParams: {'fruitName': fruitName});
   }
 
   Future<List<Fruit>> getAllFruit() async {
-    _getAllFruit.addHeader("Accept", "application/json"); //dinamically set a header to the request
+    _getAllFruit.addHeader(
+        "Accept", "application/json"); //dinamically set a header to the request
     return await _getAllFruit.call();
   }
 
   Future<void> addFruit(Fruit fruit) async {
     await _addFruit.call(body: fruit);
   }
-
 }
 
-//classes that implements json parser and json encoder, 
-//its not mandatory parser and encoder interfaces are implemented by the data class itself. 
+//classes that implements json parser and json encoder,
+//its not mandatory parser and encoder interfaces are implemented by the data class itself.
 //the interface can be implemented by another classes
 class Fruit implements JsonDecoder<Fruit>, JsonEncoder<Fruit> {
   String genus = "";
@@ -85,7 +85,6 @@ class Fruit implements JsonDecoder<Fruit>, JsonEncoder<Fruit> {
 
   @override
   Map<String, dynamic> toJson(Fruit obj) {
-    
     Map<String, dynamic> map = <String, dynamic>{};
 
     map['genus'] = obj.genus;
@@ -105,27 +104,22 @@ class Nutrition {
   num fat = 0;
   num calories = 0;
   num sugar = 0;
-
 }
 
 class NutritionDecoder extends JsonDecoder<Nutrition> {
-
   @override
   Nutrition fromJson(jsonMap) {
     Nutrition nutrition = Nutrition();
     nutrition.carbohydrates = jsonMap['carbohydrates'];
     return nutrition;
   }
-  
 }
 
 class NutritionEncoder extends JsonEncoder<Nutrition> {
-
   @override
   Map<String, dynamic> toJson(Nutrition obj) {
-     Map<String, dynamic> map = <String, dynamic>{};
-     map['carbohydrates'] = obj.carbohydrates;
-     return map;
+    Map<String, dynamic> map = <String, dynamic>{};
+    map['carbohydrates'] = obj.carbohydrates;
+    return map;
   }
-  
 }

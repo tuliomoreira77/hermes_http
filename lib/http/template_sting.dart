@@ -11,7 +11,8 @@ class TemplateString {
     final List<String> components = template.split('{');
 
     for (String component in components) {
-      if (component == '') continue; // If the template starts with "{", skip the first element.
+      if (component == '')
+        continue; // If the template starts with "{", skip the first element.
 
       final split = component.split('}');
 
