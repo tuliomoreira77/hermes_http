@@ -25,7 +25,7 @@ A Flutter library to make Rest API clients more easily. Inspired by Java Feing.
 Just add the package and follow the above instructions
 ```yaml
 dependencies:
-  hermes_http: ^1.0.0
+  hermes_http: ^1.0.1
 ```
 
 ## Usage
