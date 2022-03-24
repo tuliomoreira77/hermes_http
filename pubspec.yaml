@@ -1,6 +1,6 @@
 name: hermes_http
 description: Make rest api calls with a simple declarative way. This library was inspired in Java Feing library.
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/tuliomoreira77/hermes_http
 
 environment:
