@@ -22,7 +22,7 @@ A Flutter library to make Rest API clients more easily. Inspired by Java Feing.
  - Configurable retry attempsts on http error.
 
 ## Getting started
-Just add the package and follow the above instructions
+Just add the package and follow the instructions bellow
 ```yaml
 dependencies:
   hermes_http: ^1.0.1
